@@ -12,10 +12,15 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set in .env")
 
-# Create the async engine with SSL context
+# Create a custom SSL context that accepts Aiven's connection without crashing
+custom_ssl_context = ssl.create_default_context()
+custom_ssl_context.check_hostname = False
+custom_ssl_context.verify_mode = ssl.CERT_NONE
+
+# Create the async engine using our relaxed SSL context
 engine = create_async_engine(
     DATABASE_URL,
-    connect_args={"ssl": ssl.create_default_context()} if "mysql" in DATABASE_URL else {}
+    connect_args={"ssl": custom_ssl_context} if "mysql" in DATABASE_URL else {}
 )
 
 # Create a factory for async sessions
