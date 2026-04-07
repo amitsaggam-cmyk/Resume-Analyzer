@@ -29,11 +29,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {
-    "message": "Success", 
-    "results": ai_results,
-    "extracted_text": resume.content # <-- ADD THIS (use whatever variable holds your raw text!)
-}
+    return {"message": "Resume AI API is running!"}
 
 # --- RESUME UPLOAD ---
 @app.post("/api/upload-resume", response_model=schemas.ResumeResponse)
@@ -99,7 +95,11 @@ async def analyze_resume(
         ))
     await db.commit()
 
-    return {"analysis_id": new_analysis.id, "results": ai_result}
+    return {
+        "analysis_id": new_analysis.id, 
+        "results": ai_result,
+        "extracted_text": resume.extracted_text  # <--- THIS IS THE MAGIC LINE!
+    }
 
 # --- GET HISTORY ---
 @app.get("/api/history")
