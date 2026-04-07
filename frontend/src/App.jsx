@@ -94,7 +94,11 @@ function App() {
       
       setResults({ ...analysisData.results, current_resume_id: uploadData.id });
       setCoverLetter(''); 
-      setResumeDraft(''); // Clear editor for new audit
+      if (analysisData.extracted_text) {
+    setResumeDraft(analysisData.extracted_text);
+} else {
+    setResumeDraft(''); 
+}
     } catch (err) { 
       setError('Analysis failed. Check your API connection.'); 
     } finally { 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://resume-analyzer-qh4k.onrender.com';
+const API_URL = 'https://resume-analyzer-qh4k.onrender.com/api';
 
 export const uploadResume = async (file) => {
   const formData = new FormData();

@@ -29,7 +29,11 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"status": "success", "message": "API is live."}
+    return {
+    "message": "Success", 
+    "results": ai_results,
+    "extracted_text": resume.content # <-- ADD THIS (use whatever variable holds your raw text!)
+}
 
 # --- RESUME UPLOAD ---
 @app.post("/api/upload-resume", response_model=schemas.ResumeResponse)
