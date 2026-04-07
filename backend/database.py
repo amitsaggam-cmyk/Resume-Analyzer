@@ -1,5 +1,6 @@
 # backend/database.py
 import os
+import ssl
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
@@ -11,10 +12,13 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set in .env")
 
-# Create the async engine. echo=True prints the SQL queries to the terminal (great for debugging!)
-engine = create_async_engine(DATABASE_URL, echo=True)
+# Create the async engine with SSL context
+engine = create_async_engine(
+    DATABASE_URL,
+    connect_args={"ssl": ssl.create_default_context()} if "mysql" in DATABASE_URL else {}
+)
 
-# Create a factory for async sessions, whenever we need to interact with the database, we'll use this to create a session
+# Create a factory for async sessions
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
